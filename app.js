@@ -112,7 +112,7 @@ var globeMaterial = new THREE.MeshPhongMaterial({
 });
 
 var globeMesh = new THREE.Mesh(globeGeometry, globeMaterial);
-globeMesh.position.y = 10;
+globeMesh.position.y = 12.5;
 scene.add(globeMesh);
 
 
@@ -259,6 +259,34 @@ const indiaFlag = new THREE.Mesh(circleGeometry, flagMaterial);
 indiaFlag.position.set(0, 0.1, 0); // You can adjust the y value (0.1) to set the flag's height above the grassland
 indiaFlag.rotation.x = Math.PI / 2; // Rotate the flag plane to be parallel to the grassland surface
 scene.add(indiaFlag);
+
+const raycaster = new THREE.Raycaster();
+let INTERSECTED;
+
+// Add a click event listener to the window object
+window.addEventListener('click', onClick, false);
+
+function onClick(event) {
+  event.preventDefault();
+
+  // Calculate mouse position in normalized device coordinates
+  const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+  const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  // Update the picking ray with the camera and mouse position
+  raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), camera);
+
+  // Calculate objects intersecting the picking ray
+  const intersects = raycaster.intersectObjects(scene.children);
+
+  for (let i = 0; i < intersects.length; i++) {
+    if (intersects[i].object === indiaFlag) {
+      window.location.href = "https://silly-longma-33db0f.netlify.app/";
+      break;
+    }
+  }
+}
+
 
 // Use the global THREE object instead of importing
 const fontLoader = new THREE.FontLoader();
@@ -846,7 +874,7 @@ function loadFont(url) {
 
 // Set up raycaster for click detection
 // const clickableObjects = [];
-const raycaster = new THREE.Raycaster();
+// const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 function onMouseClick(event) {
@@ -884,7 +912,7 @@ function renderLoop() {
   requestAnimationFrame(renderLoop);
   // grassMaterial.uniforms.time.value += 0.01;
   globePivot.rotation.y += 0.005;
-  imagePlane.rotation.y += 0.01;
+  imagePlane.rotation.y += 0.005;
 
   renderer.render(scene, camera);
 }
